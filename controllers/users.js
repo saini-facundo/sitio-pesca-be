@@ -1,11 +1,11 @@
 const { response, request } = require("express");
 const User = require("../models/user");
+const bcryptjs = require("bcryptjs");
 const { generateJWT } = require("../helpers/jwt");
 
 const createUser = async (req = request, res = response) => {
-  console.log("BODY = ", req.body);
   try {
-    const { name, surname, email } = req.body;
+    const { name, surname, username, email, password } = req.body;
     const userDB = await User.findOne({ email });
     if (userDB) {
       return res.status(400).json({
@@ -13,9 +13,10 @@ const createUser = async (req = request, res = response) => {
         msg: "Ya existe un usuario con ese correo",
       });
     }
-    const user = new User({ name, surname, email });
+    const user = new User({ name, surname, username, email, password });
+    const salt = bcryptjs.genSaltSync();
+    user.password = bcryptjs.hashSync(password, salt);
     await user.save();
-
     const token = await generateJWT(user.id, user.name);
 
     return res.status(201).json({
