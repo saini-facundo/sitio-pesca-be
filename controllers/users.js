@@ -35,6 +35,13 @@ const createUser = async (req = request, res = response) => {
   }
 };
 
+const login = async (req = request, res = response) => {
+  return res.status(200).json({
+    ok: true,
+    msg: "loginS",
+  });
+};
+
 const editUser = async (req = request, res = response) => {
   return res.status(200).json({
     ok: true,
@@ -65,6 +72,7 @@ const deleteUser = async (req = request, res = response) => {
 
 module.exports = {
   createUser,
+  login,
   editUser,
   getUsers,
   getUser,
