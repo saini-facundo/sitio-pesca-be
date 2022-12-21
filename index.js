@@ -7,6 +7,9 @@ const port = process.env.PORT;
 //crear servidor de express
 const app = express();
 
+//lectura y parseo del body
+app.use(express.json());
+
 //conexion a DB
 dbConnection();
 

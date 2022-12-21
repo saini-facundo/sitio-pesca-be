@@ -6,15 +6,17 @@ const {
   getUser,
   deleteUser,
 } = require("../controllers/users");
+const { validateFields } = require("../middlewares/fieldValidator");
+
 const router = Router();
 
-router.post("/", [], createUser);
+router.post("/", [validateFields], createUser);
 
-router.put("/", [], editUser);
+router.put("/", [validateFields], editUser);
 
-router.get("/", [], getUsers);
+router.get("/", [validateFields], getUsers);
 
-router.get("/user", [], getUser);
+router.get("/user", [validateFields], getUser);
 
 router.delete("/", [], deleteUser);
 
