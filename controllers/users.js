@@ -13,7 +13,14 @@ const createUser = async (req = request, res = response) => {
         msg: "Ya existe un usuario con ese correo",
       });
     }
-    const user = new User({ name, surname, username, email, password });
+    const user = new User({
+      name,
+      surname,
+      username,
+      email,
+      password,
+      active: true,
+    });
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync(password, salt);
     await user.save();
@@ -117,7 +124,7 @@ const editUser = async (req = request, res = response) => {
 
 const getUsers = async (req = request, res = response) => {
   try {
-    const users = await User.find();
+    const users = await User.find({ active: true });
 
     return res.status(201).json({
       ok: true,
@@ -156,10 +163,33 @@ const getUser = async (req = request, res = response) => {
 };
 
 const deleteUser = async (req = request, res = response) => {
-  return res.status(200).json({
-    ok: true,
-    msg: "deleteUser",
-  });
+  try {
+    const paramID = req.params.id;
+    const userDB = await User.findById(paramID);
+
+    if (!userDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: `No se se encontó ningún usuario con ID ${paramID}`,
+      });
+    }
+
+    const deletedUser = await User.findByIdAndUpdate(
+      paramID,
+      { active: false },
+      { new: true }
+    );
+
+    return res.status(201).json({
+      ok: true,
+      user: deletedUser,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: error,
+    });
+  }
 };
 
 module.exports = {

@@ -57,6 +57,6 @@ router.get("/", [validateJWT, validateFields], getUsers);
 
 router.get("/:id", [validateJWT, validateFields], getUser);
 
-router.delete("/", [], deleteUser);
+router.delete("/:id", [validateJWT, validateFields], deleteUser);
 
 module.exports = router;

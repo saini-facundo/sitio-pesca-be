@@ -22,6 +22,10 @@ const UserSchema = Schema({
     required: true,
     unique: true,
   },
+  active: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 UserSchema.method("toJSON", function () {
