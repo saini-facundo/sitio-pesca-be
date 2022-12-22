@@ -9,6 +9,7 @@ const {
   deleteUser,
 } = require("../controllers/users");
 const { validateFields } = require("../middlewares/fieldValidator");
+const { validateJWT } = require("../middlewares/JWTValidator");
 
 const router = Router();
 
@@ -41,7 +42,16 @@ router.post(
   login
 );
 
-router.put("/", [validateFields], editUser);
+router.put(
+  "/:id",
+  [
+    check("name", "El nombre es obligatorio").notEmpty(),
+    check("surname", "El apellido es obligatorio").notEmpty(),
+    validateJWT,
+    validateFields,
+  ],
+  editUser
+);
 
 router.get("/", [validateFields], getUsers);
 

@@ -76,10 +76,45 @@ const login = async (req = request, res = response) => {
 };
 
 const editUser = async (req = request, res = response) => {
-  return res.status(200).json({
-    ok: true,
-    msg: "editUser",
-  });
+  try {
+    const { name, surname } = req.body;
+    const paramID = req.params.id;
+    const uid = req.uid;
+    const userDB = await User.findById(paramID);
+
+    if (!userDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: `No se se encontó ningún usuario con ID ${paramID}`,
+      });
+    }
+
+    if (userDB.id !== uid) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No puede editar a otro usuario",
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      paramID,
+      { name, surname },
+      {
+        new: true,
+      }
+    );
+
+    return res.status(201).json({
+      ok: true,
+      updatedUser,
+    });
+  } catch (error) {
+    console.log("error = ", error);
+    return res.status(500).json({
+      ok: false,
+      msg: error,
+    });
+  }
 };
 
 const getUsers = async (req = request, res = response) => {
