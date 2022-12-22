@@ -116,10 +116,19 @@ const editUser = async (req = request, res = response) => {
 };
 
 const getUsers = async (req = request, res = response) => {
-  return res.status(200).json({
-    ok: true,
-    msg: "getUsers",
-  });
+  try {
+    const users = await User.find();
+
+    return res.status(201).json({
+      ok: true,
+      users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: error,
+    });
+  }
 };
 
 const getUser = async (req = request, res = response) => {

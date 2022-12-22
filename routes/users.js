@@ -53,7 +53,7 @@ router.put(
   editUser
 );
 
-router.get("/", [validateFields], getUsers);
+router.get("/", [validateJWT, validateFields], getUsers);
 
 router.get("/user", [validateFields], getUser);
 
