@@ -37,10 +37,42 @@ const createUser = async (req = request, res = response) => {
 };
 
 const login = async (req = request, res = response) => {
-  return res.status(200).json({
-    ok: true,
-    msg: "loginS",
-  });
+  const { username, password } = req.body;
+
+  try {
+    const userDBUsername = await User.findOne({ username });
+    const userDBEmail = await User.findOne({ email: username });
+    const userDB = userDBUsername || userDBEmail;
+    if (!userDB) {
+      return res.status(400).json({
+        ok: false,
+        msg: "No existe un usuario con ese correo/username",
+      });
+    }
+
+    const validPassword = bcryptjs.compareSync(password, userDB.password);
+
+    if (!validPassword) {
+      return res.status(400).json({
+        ok: false,
+        msg: "No existe un usuario con ese password",
+      });
+    }
+
+    const token = await generateJWT(userDB.id, userDB.name);
+
+    return res.status(200).json({
+      ok: true,
+      userDB,
+      token,
+    });
+  } catch (error) {
+    console.log("error = ", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error en el servidor (auth.js/login)",
+    });
+  }
 };
 
 const editUser = async (req = request, res = response) => {
