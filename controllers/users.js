@@ -132,10 +132,27 @@ const getUsers = async (req = request, res = response) => {
 };
 
 const getUser = async (req = request, res = response) => {
-  return res.status(200).json({
-    ok: true,
-    msg: "getUser",
-  });
+  try {
+    const paramID = req.params.id;
+    const userDB = await User.findById(paramID);
+
+    if (!userDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: `No se se encontó ningún usuario con ID ${paramID}`,
+      });
+    }
+
+    return res.status(201).json({
+      ok: true,
+      user: userDB,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: error,
+    });
+  }
 };
 
 const deleteUser = async (req = request, res = response) => {

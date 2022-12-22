@@ -55,7 +55,7 @@ router.put(
 
 router.get("/", [validateJWT, validateFields], getUsers);
 
-router.get("/user", [validateFields], getUser);
+router.get("/:id", [validateJWT, validateFields], getUser);
 
 router.delete("/", [], deleteUser);
 
