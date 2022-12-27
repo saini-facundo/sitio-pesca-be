@@ -9,14 +9,14 @@ const LocationSchema = Schema({
     type: [Number],
     required: true,
   },
+  description: {
+    type: String,
+  },
   visits: {
     type: Number,
   },
   fishes: {
     type: [String],
-  },
-  description: {
-    type: String,
   },
   places: {
     type: [String],
