@@ -88,10 +88,18 @@ const editLocation = async (req = request, res = response) => {
 };
 
 const getLocations = async (req = request, res = response) => {
-  return res.status(200).json({
-    ok: true,
-    msg: "getLocations",
-  });
+  try {
+    const locations = await Location.find({ active: true });
+    return res.status(201).json({
+      ok: true,
+      locations,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: error,
+    });
+  }
 };
 
 const getLocation = async (req = request, res = response) => {

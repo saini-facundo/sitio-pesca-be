@@ -33,10 +33,13 @@ router.put("/:id", [
   validateFields
 ], editLocation);
 
-router.get("/", [], getLocations);
+router.get("/", [
+  validateJWT,
+  validateFields
+], getLocations);
 
-router.get("/location", [], getLocation);
+router.get("/:id", [], getLocation);
 
-router.delete("/", [], deleteLocation);
+router.delete("/:id", [], deleteLocation);
 
 module.exports = router;
