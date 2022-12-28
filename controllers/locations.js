@@ -56,7 +56,7 @@ const editLocation = async (req = request, res = response) => {
     if (locationWithSameName?.id !== paramID) {
       return res.status(400).json({
         ok: false,
-        msg: `Ya existe una zona con el nombre ${name}`
+        msg: `Ya existe una zona con el nombre ${name}`,
       });
     }
 
@@ -127,10 +127,33 @@ const getLocation = async (req = request, res = response) => {
 };
 
 const deleteLocation = async (req = request, res = response) => {
-  return res.status(200).json({
-    ok: true,
-    msg: "deleteLocation",
-  });
+  try {
+    const paramID = req.params.id;
+    const locationDB = await Location.findById(paramID);
+
+    if (!locationDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: `No se se encontó ninguna zona con ID ${paramID}`,
+      });
+    }
+
+    const deletedLocation = await Location.findByIdAndUpdate(
+      paramID,
+      { active: false },
+      { new: true }
+    );
+
+    return res.status(201).json({
+      ok: true,
+      user: deletedLocation,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      ok: false,
+      msg: error,
+    });
+  }
 };
 
 module.exports = {
