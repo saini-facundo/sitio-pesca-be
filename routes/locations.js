@@ -22,7 +22,16 @@ router.post(
   createLocation
 );
 
-router.put("/", [], editLocation);
+router.put("/:id", [
+  check("name", "El nombre es obligatorio").notEmpty(),
+  check("coordinates", "Las coordenadas son obligatorias").notEmpty(),
+  check("description", "La descripción es obligatoria").notEmpty(),
+  check("visits", "Las visitas son obligatorias").exists(),
+  check("fishes", "El listado de peces es obligatorio").exists(),
+  check("places", "El listado de lugares de interés es obligatorio").exists(),
+  validateJWT,
+  validateFields
+], editLocation);
 
 router.get("/", [], getLocations);
 
