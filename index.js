@@ -7,6 +7,8 @@ const port = process.env.PORT;
 //crear servidor de express
 const app = express();
 
+app.use(cors());
+
 //lectura y parseo del body
 app.use(express.json());
 
